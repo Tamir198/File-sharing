@@ -2,29 +2,30 @@ var express = require('express');
 var app = express();
 
 const cors = require('cors');
-const fs = require('fs');
 const multer = require("multer");
-const upload = multer({dest:'uploads/'});
+
+const storage = multer.diskStorage({
+  destination: function(req,res,next){
+    next(null,'./uploads/')
+  },
+  filename: function(req,file,next){
+    next(null,file.originalname)
+  }
+})
+
+const upload = multer({storage:storage});
+app.use(express.static('uploads'))
 
 app.use(cors());
 
 
-// //send back image for the url `http://localhost:8081/fileName`
-// app.post('/v1/file', (req, res) =>{
-//   console.log(req);
-// //  res.send(`http://localhost:8081/${req.params.fileName}`);
-//  res.send("http://localhost:8081/home.png");
-// });
-
-//send back image for the url `http://localhost:8081/fileName`
 app.post('/v1/file',upload.single("image"), (req, res) =>{
   console.log(req.file);
- res.send("http://localhost:8081/home.png");
+ res.send(`http://localhost:8081/${req.file.filename}`);
 });
-
-
-app.get('/:fileName', (req, res) =>{
-  res.sendFile(`http://localhost:8081/home.png`);
+  
+app.get('/v1/:fileName', (req, res) =>{
+  res.sendFile(`/${req.params.fileName}`);
  });
 
 var server = app.listen(8081, () => {
