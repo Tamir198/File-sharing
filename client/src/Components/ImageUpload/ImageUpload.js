@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+import './imageupload.css'
+
+import copyToClipboard from '../../Utils/copyToClipboard'
+
 function ImageUpload() {
   const [selectedFile, setSelectedFile] = useState();
   const [imagePathFromServer, setImagePathFromServer] = useState();
@@ -26,28 +30,29 @@ function ImageUpload() {
     })
   };
 
-
   return (
-    <div>
+    <div className="file--chose-container">
       {
-        imagePathFromServer ? <p>{"Share your image with friends  " + imagePathFromServer}</p>  
+        imagePathFromServer ? <div>
+         <p>{"Share your image with friends  " + imagePathFromServer}</p>
+          <button onClick={copyToClipboard(imagePathFromServer)}>Copy</button>
+        </div> 
+    
+       
           : <form encType="multipart/form-data">
-            <input className="expiration--time--input" type="number" placeholder="Expiration time" min="1" onChange={(e) => setExpirationTime(e.target.value)} />
+            <input type="number" placeholder="Expiration time" min="1" onChange={(e) => setExpirationTime(e.target.value)} />
             <input type="file" name="image" onChange={handleFileSelection} />
           </form>
       }
 
       {isFilePicked ?
         <div>
-          <p>You selected file name : {selectedFile.name}</p>
-          <p>with type of: {selectedFile.type}</p>
+          <h2>selected file name : {selectedFile.name}</h2>
+          <h4>File type : {selectedFile.type}</h4>
         </div>
-
         : <p>Select a file to show details</p>
       }
-      <div>
         <button onClick={uploadImage}>Submit</button>
-      </div>
 
     </div>
   )
