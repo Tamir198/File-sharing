@@ -3,45 +3,52 @@ import axios from 'axios';
 
 function ImageUpload() {
   const [selectedFile, setSelectedFile] = useState();
+  const [imagePathFromServer, setImagePathFromServer] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
+  const [expirationTime,setExpirationTime] = useState(1);
 
-  const changeHandler = (event) => {
+  const handleFileSelection = (event) => {
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
   };
 
-  const handleSubmission = () => {
+  const uploadImage = () => {
     const formData = new FormData();
     formData.append('image', selectedFile);
 
-    console.log(selectedFile);
-
     axios.post('http://localhost:8081/v1/file', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        'expirationTime': expirationTime
       }
-    }).then( (response) => {console.log(response.data);
-  })
+    }).then((response) => {
+      setImagePathFromServer(response.data);
+    })
   };
 
 
   return (
     <div>
-      <form encType="multipart/form-data" action="">
-        <input type="file" name="image" onChange={changeHandler} />
-      </form>
-      {/* <input type="file" name="image" onChange={changeHandler} /> */}
-      {isFilePicked ? (
+      {
+        imagePathFromServer ? <p>{"Share your image with friends  " + imagePathFromServer}</p>  
+          : <form encType="multipart/form-data">
+            <input className="expiration--time--input" type="number" placeholder="Expiration time" min="1" onChange={(e) => setExpirationTime(e.target.value)} />
+            <input type="file" name="image" onChange={handleFileSelection} />
+          </form>
+      }
+
+      {isFilePicked ?
         <div>
           <p>You selected file name : {selectedFile.name}</p>
           <p>with type of: {selectedFile.type}</p>
         </div>
-      ) : (
-        <p>Select a file to show details</p>
-      )}
+
+        : <p>Select a file to show details</p>
+      }
       <div>
-        <button onClick={handleSubmission}>Submit</button>
+        <button onClick={uploadImage}>Submit</button>
       </div>
+
     </div>
   )
 }

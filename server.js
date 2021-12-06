@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 
 const cors = require('cors');
+const fs = require('fs');
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -15,14 +16,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage:storage});
 app.use(express.static('uploads'))
-
 app.use(cors());
 
-
 app.post('/v1/file',upload.single("image"), (req, res) =>{
-  console.log("********************************");
-  console.log(req.body.image);
-  console.log("********************************");
+setTimeout(() => fs.unlinkSync(`./uploads/${req.file.filename}`), Number(req.headers.expirationtime) * 60000);
  res.send(`http://localhost:8081/${req.file.filename}`);
 });
   
