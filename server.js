@@ -20,7 +20,9 @@ app.use(cors());
 
 
 app.post('/v1/file',upload.single("image"), (req, res) =>{
-  console.log(req.file);
+  console.log("********************************");
+  console.log(req.body.image);
+  console.log("********************************");
  res.send(`http://localhost:8081/${req.file.filename}`);
 });
   
