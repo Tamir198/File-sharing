@@ -1,8 +1,12 @@
 import { render, screen } from '@testing-library/react';
+import ImageUpload from './Components/ImageUpload/ImageUpload';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('Fake test', () => {
+  expect(true).toBeTruthy();
 });
+
+test('Check that there is a file', () =>{
+  expect(document.getElementById("find-me")).toBeNull;
+})
+

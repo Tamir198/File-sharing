@@ -1,9 +1,13 @@
 import './App.css';
+import ImageUpload from './Components/ImageUpload/ImageUpload';
+import About from './Components/About/About';
+
 
 function App() {
   return (
     <div>
-      <p>I am simple react app</p>
+      <About></About> 
+      <ImageUpload></ImageUpload>
     </div>
 
   );
